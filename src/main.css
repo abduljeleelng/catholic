@@ -1,0 +1,60 @@
+body{
+    background-color: #eeeeee;
+}
+.header{
+    background-color: blue;
+    color: white;
+    max-height: 50px;
+    min-height: 50px;
+    position: fixed;
+    width: 100%;
+    margin-top: 0px;
+    z-index: 3;
+    padding-top: 7px;
+}
+.Link {
+    color: white;
+    border-radius: 5px;
+    border-bottom: 2px solid white;
+}
+.Link a:hover{
+    border-color: white;
+    color: white;
+}
+.postCat{
+    top: 45px;
+    position: relative;
+    border-radius: 5px;
+    z-index: 2;
+
+}
+.post{
+    z-index: -1;
+    border: 2px solid #eeeeee;
+    color: black;
+    padding-top: 10px;
+    
+}
+.fixedPoint{
+    position: fixed;
+}
+.bg-signup {
+    background: url("images/connection.png");
+    background-position: center;
+    background-size: cover;
+  }
+
+  .bg-img{
+    background: url("images/connection.png");
+    background-position: center;
+    background-size: cover;
+    /*padding-top: 10rem;
+    padding-bottom: calc(10rem - 72px);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(92, 77, 66, 0.8)), to(rgba(92, 77, 66, 0.8))), url("images/connection.png");
+    background: linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url("images/connection.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+    */
+  }
