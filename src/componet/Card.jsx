@@ -1,6 +1,11 @@
 import React,{Fragment,Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {Card, CardImg, CardText, CardBody, CardTitle,CardFooter, CardLink, CardSubtitle, Button} from 'reactstrap';
+import { isAuthenticated } from '../auth';
+import { deletePost } from '../screen/post/apiPost';
+
+
+
 
 export const NewPostCard = () => {
   ///const {title,body} =this.state;
@@ -53,69 +58,114 @@ export const NewPostCard = () => {
     )
 }
 
-export const ReadPostCard = ({post}) => {
-    return(
-<div className="card">
+export const ReadPostCard = ({
+  likeToggle,
+  post, postImage, imageAlt, noImage,singlePost,auth,profilePhoto,noProfilePhoto,
+   handledelete, like, likes,comment}) => {
+    /* const token = isAuthenticated().token;
+     const postId = post._id;
+    console.log(postId);
+   const handledelete=()=>{
+    deletePost(postId,token)
+    .then(data=>{
+      if(data.error || data===undefined){
+        return console.log("error");
+        console.log(data)
+      }
+      console.log(data);
+      alert(data.message);
+      window.location.reload("/Posts");
+      return <Redirect to="./Posts" />
+    })
+  }
+ */
+ return(
+ <div className="card">
   {/* post title start */}
   <div className="post-title d-flex align-items-center">
     {/* profile picture end */}
     <div className="profile-thumb">
-      <a href="#">
+    <Link to={`/${post.postedBy._id}`}>
         <figure className="profile-thumb-middle">
-          <img src="assets/images/profile/profile-small-1.jpg" alt="profile picture" />
+          <img src={profilePhoto} onError={i=>i.target.src=`${noProfilePhoto}`} alt="profile picture" />
         </figure>
-      </a>
+      </Link>
     </div>
     {/* profile picture end */}
     <div className="posted-author">
-      <h6 className="author"><a href="profile.html">{post.postedBy.name ? post.postedBy.name: "Unkmow Poster" }</a></h6>
+      <h6 className="author"><Link to={`/${post.postedBy._id}`}>{post.postedBy.firstName ? post.postedBy.firstName + post.postedBy.lastName : "Unkmow Poster" }</Link></h6>
       <span className="post-time">on {new Date(post.created).toDateString()} </span>
     </div>
+    {singlePost ? (
     <div className="post-settings-bar">
       <span />
       <span />
       <span />
       <div className="post-settings arrow-shape">
-        <ul>
-          <li><button>Delete</button></li>
-          <li><button>edit post</button></li>
-          <li><button>embed adda</button></li>
-        </ul>
+        {isAuthenticated().user && isAuthenticated().user._id === post.postedBy._id ? (
+                  <ul>
+                  <li><button onClick={handledelete}> Delete</button></li>
+                  <li><button>edit post</button></li>
+                </ul>
+        ):(
+          <ul>
+          <li> <Link to="/" >Login </Link> </li>
+          <li> <Link to="/" >Sign Up </Link> </li>
+          </ul>
+        )}
+
       </div>
-    </div>
+    </div>):"" }
   </div>
   {/* post title start */}
   <div className="post-content">
     <h4>{post.title}</h4>
-    <p className="post-desc">
-      {post.body.substring(0,100)}
-    </p>
     <div className="post-thumb-gallery">
       <figure className="post-thumb img-popup">
-        <a href="assets/images/post/post-large-1.jpg">
-          <img src="assets/images/post/post-1.jpg" alt="post image" />
+        <a href={postImage}>
+          { singlePost ? 
+          (<img src={postImage} alt={imageAlt} onError={i=>i.target.src=`${noImage}`}   />) : 
+          (<img src={postImage} alt={imageAlt} onError={i=>i.target.src=`${noImage}`} width={510} height={270} />)
+          }
+          
         </a>
       </figure>
     </div>
+    <p className="post-desc">
+      {singlePost ? (post.body): <> {post.body.substring(0,100)}<Link to={`/post/${post._id}`}> Read more ..</Link> </> }
+      
+    </p>
+
     <div className="post-meta">
-      <button className="post-meta-like">
-        <i className="bi bi-heart-beat" />
-        <span>You and 201 people like this</span>
-        <strong>201</strong>
-      </button>
+
+    {like ? (
+                  <button className="post-meta-like" onClick={likeToggle}>
+                  <i className="bi bi-heart-beat " />
+                  <span>you and {post.likes.length -1} people like this</span>
+                  <strong>201</strong>
+                </button>
+                ) : (
+                  <button className="post-meta-like" onClick={likeToggle}>
+                  <i className="bi bi-heart-beat " />
+                  <span>like, others {post.likes.length} people like this</span>
+                  <strong>201</strong>
+                </button>
+                )}
       <ul className="comment-share-meta">
         <li>
+          <Link to={`/post/${post._id}`} >
           <button className="post-comment">
             <i className="bi bi-chat-bubble" />
-            <span>41</span>
+            <span>{post.comments.length > 0 ? post.comments.length : 0}</span>
           </button>
-        </li>
-        <li>
+          </Link>
+        </li> 
+        {/*<li>
           <button className="post-share">
             <i className="bi bi-share" />
             <span>07</span>
           </button>
-        </li>
+        </li>*/}
       </ul>
     </div>
   </div>

@@ -2,9 +2,12 @@ import React,{Component} from 'react';
 import {ReadPostCard,EmptyPost} from '../../componet/Card';
 import {ScrollToTop, } from '../../componet/Footer.jsx';
 import {MainHeader, SecondHeader } from '../../componet/Header.jsx';
-import {postList} from "./apiPost";
+import {postList,photoAPI,deletePost} from "./apiPost";
 import {isAuthenticated} from "../../auth/index";
 import CreatePost from "./CreatePost";
+import DefaultImage from "./defaultImage.jpg";
+/// import NoCover from "../users/images/mountains.jpg";
+import NoProfile from "../users/images/avatar.jpg";
 import { CardProfile, LikeCard, TopNew } from '../../componet/RSideBar';
 import { Notifications, Advert, FriendsZOne } from '../../componet/LSideBar';
 
@@ -42,8 +45,21 @@ class Post extends Component{
         this.setState({ page: this.state.page - number });
         this.loadPosts(this.state.page - number);
     };
+   // const token = isAuthenticated().token;
+    //const postId = post._id;
+   // console.log(postId);
+    handledelete=(postId,token)=>{
+      deletePost(postId,token)
+      .then(data=>{
+        if(data.error){console.log(data)}
+        console.log(data);
+        alert(data.message);
+        window.location.reload("/Posts");
+      })
+    }
     render(){
         const {post,auth} = this.state;
+        const token = isAuthenticated().token;
         return(
             <>
             <MainHeader />
@@ -56,27 +72,32 @@ class Post extends Component{
           <aside className="widget-area">
               {auth ? (
                   <>
-                    <CardProfile />
+                    {/*<CardProfile />
                     <LikeCard />
-                    <TopNew />
+                    <TopNew />*/}
                   </>
-              ):(
-                <TopNew />
-              )}
+              ):(``)}
             
           </aside>
         </div>
        <div className="col-lg-6 order-1 order-lg-2" >
-           { auth ? (<CreatePost />):("")}
+           { auth ? (<CreatePost profileImage="" noProfileImage={NoProfile} />):("")}
            {post.length > 0 ? post.map((post,index)=>(
-               <ReadPostCard key={index} post={post} />
-                )):<EmptyPost post={post} />}
+               //? `http://localhost:8080/api/posts/photo/${post._id}`: DefaultImage
+               //{`${photoAPI}/${post._id}` ? `${photoAPI}/${post._id}`: 'defaultImage.jpg'}
+               <ReadPostCard key={index} auth={auth} post={post} postImage={photoAPI+post._id} noImage={DefaultImage} imageAlt={post.title} profilePhoto="" noProfilePhoto={NoProfile} />
+                )):<EmptyPost post={post} />
+            }
        </div>
       <div className="col-lg-3 order-3">
                 <aside className="widget-area">
-                    <Notifications />
+                
+                    
+                    {/*<Notifications />
                     <Advert />
-                    <FriendsZOne />
+                    <FriendsZOne />*/}
+                    
+                    
                 </aside>
        </div>
       </div>
