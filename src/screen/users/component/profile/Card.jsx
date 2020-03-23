@@ -1,12 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import { isAuthenticated } from '../../../../auth';
+import heart from '../../../../assets/images/icons/heart.png'
+import heartColor from '../../../../assets/images/icons/heart-color.png'
 
 
-export  const ProfileHeader =({auth, userId, cover,photo, nophoto, nocover})=> {
-  console.log(photo)
+export  const ProfileHeader =({ userId, cover,photo, nophoto, nocover})=> {
   const yellow = "#ee35";
-  //style={{backgroundColor:`${yellow}`, backgroundImages:`${photo ? photo:nophoto}`,backgroundPosition:'center', backgroundSize:'cover'}}
   const bg = {
      backgroundColor:`${yellow}`,
      backgroundImage:`url(${cover ? cover:nocover})`,
@@ -15,15 +15,15 @@ export  const ProfileHeader =({auth, userId, cover,photo, nophoto, nocover})=> {
   }
         return (
           <>
-          <div className={`profile-banner-large ${bg}`}  style={bg} data-bg={cover} onError={nocover}></div>
+          <div className={`profile-banner-large ${bg}`} style={bg}  onError={i=>i.target.src=`${nocover}`}></div>
           <div className="profile-menu-area bg-white">
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-lg-3 col-md-3">
                   <div className="profile-picture-box">
                     <figure className="profile-picture">
-                      <Link to={`/profile${userId}`}>
-                        <img src={photo ? photo : nophoto} onError={nophoto} alt="profile picture" />
+                      <Link to={`/user/${userId}`}>
+                        <img src={photo ? photo : nophoto} onError={i=>i.target.src=`${nophoto}`} alt="profile" />
                       </Link>
                     </figure>
                   </div>
@@ -33,9 +33,9 @@ export  const ProfileHeader =({auth, userId, cover,photo, nophoto, nocover})=> {
                     <div className="main-menu-inner header-top-navigation">
                       <nav>
                         <ul className="main-menu">
-                          <li className="active"><Link to={`/${userId}`}>timeline</Link></li>
-                          <li><Link to={`/about/${userId}`}>about</Link></li>
-                          <li><Link to={`/photo/${userId}`}>photos</Link></li>
+                          <li className="active"><Link to={`/user`}>timeline</Link></li>
+                          {/*<li><Link to={`/about/${userId}`}>about</Link></li>
+                          <li><Link to={`/photo/${userId}`}>photos</Link></li>*/}
                           <li><Link to={`/friend/${userId}`}>friends</Link></li>
                         </ul>
                       </nav>
@@ -44,7 +44,7 @@ export  const ProfileHeader =({auth, userId, cover,photo, nophoto, nocover})=> {
                 </div>
                 <div className="col-lg-2 col-md-3 d-none d-md-block">
                   <div className="profile-edit-panel">
-                   {isAuthenticated().user && isAuthenticated().user._id === userId ? (<button className="edit-btn">edit profile</button>):("")} 
+                   {isAuthenticated().user && isAuthenticated().user._id === userId ? (<Link to="/edit"><button className="edit-btn">edit profile</button></Link>):("")} 
                   </div>
                 </div>
               </div>
@@ -54,21 +54,21 @@ export  const ProfileHeader =({auth, userId, cover,photo, nophoto, nocover})=> {
         )
 }
 
-export const LeftSideBar = ()=>{
+export const LeftSideBar = ({about})=>{
     return(
         <div className="col-lg-3 order-2 order-lg-1">
         <aside className="widget-area profile-sidebar">
           {/* widget single item start */}
           <div className="card widget-item">
-            <h4 className="widget-title">kate palson</h4>
+            <h4 className="widget-title">{about.firstName ? about.firstName +" "+ about.lastName : "No Name"}</h4>
             <div className="widget-body">
               <div className="about-author">
-                <p>I Don’t know how? But i believe that it is possible one day if i stay with my dream all time</p>
+                <p>{about.about ? about.about :"Say something about yourself"}</p>
                 <ul className="author-into-list">
-                  <li><a href="#"><i className="bi bi-office-bag" />Graphic Designer</a></li>
-                  <li><a href="#"><i className="bi bi-home" />Melbourne, Australia</a></li>
-                  <li><a href="#"><i className="bi bi-location-pointer" />Pulshar, Melbourne</a></li>
-                  <li><a href="#"><i className="bi bi-heart-beat" />Travel, Swimming</a></li>
+                  <li><Link to={`/user/${about._id}`}><i className="bi bi-office-bag" />{about.occupation ? about.occupation : "your Occupation"}</Link></li>
+                  <li><Link to={`/user/${about._id}`}><i className="bi bi-home" />{about.education ? about.education : "Educational Level"}</Link></li>
+                  <li><Link to={`/user/${about._id}`}><i className="bi bi-location-pointer" />{about.address ? about.address : "Address"}</Link></li>
+                  <li><Link to={`/user/${about._id}`}><i className="bi bi-heart-beat" />{about.interest ? about.interest : "your Interest"}</Link></li>
                 </ul>
               </div>
             </div>
@@ -80,12 +80,13 @@ export const LeftSideBar = ()=>{
             <div className="widget-body">
               <div className="sweet-galley img-gallery">
                 <div className="row row-5">
+                  {/*
                   <div className="col-4">
                     <div className="gallery-tem">
                       <figure className="post-thumb">
-                        <a className="gallery-selector" href="assets/images/gallery/gallery-1.jpg">
+                        <Link className="gallery-selector" to="assets/images/gallery/gallery-1.jpg">
                           <img src="assets/images/gallery/gallery-1.jpg" alt="sweet memory" />
-                        </a>
+                        </Link>
                       </figure>
                     </div>
                   </div>
@@ -98,69 +99,7 @@ export const LeftSideBar = ()=>{
                       </figure>
                     </div>
                   </div>
-                  <div className="col-4">
-                    <div className="gallery-tem">
-                      <figure className="post-thumb">
-                        <a className="gallery-selector" href="assets/images/gallery/gallery-3.jpg">
-                          <img src="assets/images/gallery/gallery-3.jpg" alt="sweet memory" />
-                        </a>
-                      </figure>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="gallery-tem">
-                      <figure className="post-thumb">
-                        <a className="gallery-selector" href="assets/images/gallery/gallery-4.jpg">
-                          <img src="assets/images/gallery/gallery-4.jpg" alt="sweet memory" />
-                        </a>
-                      </figure>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="gallery-tem">
-                      <figure className="post-thumb">
-                        <a className="gallery-selector" href="assets/images/gallery/gallery-5.jpg">
-                          <img src="assets/images/gallery/gallery-5.jpg" alt="sweet memory" />
-                        </a>
-                      </figure>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="gallery-tem">
-                      <figure className="post-thumb">
-                        <a className="gallery-selector" href="assets/images/gallery/gallery-6.jpg">
-                          <img src="assets/images/gallery/gallery-6.jpg" alt="sweet memory" />
-                        </a>
-                      </figure>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="gallery-tem">
-                      <figure className="post-thumb">
-                        <a className="gallery-selector" href="assets/images/gallery/gallery-7.jpg">
-                          <img src="assets/images/gallery/gallery-7.jpg" alt="sweet memory" />
-                        </a>
-                      </figure>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="gallery-tem">
-                      <figure className="post-thumb">
-                        <a className="gallery-selector" href="assets/images/gallery/gallery-8.jpg">
-                          <img src="assets/images/gallery/gallery-8.jpg" alt="sweet memory" />
-                        </a>
-                      </figure>
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="gallery-tem">
-                      <figure className="post-thumb">
-                        <a className="gallery-selector" href="assets/images/gallery/gallery-9.jpg">
-                          <img src="assets/images/gallery/gallery-9.jpg" alt="sweet memory" />
-                        </a>
-                      </figure>
-                    </div>
-                  </div>
+                */}
                 </div>
               </div>
             </div>
@@ -172,80 +111,24 @@ export const LeftSideBar = ()=>{
             <div className="widget-body">
               <ul className="like-page-list-wrapper">
                 <li className="unorder-list">
-                  {/* profile picture end */}
+                  {/* profile picture end 
                   <div className="profile-thumb">
-                    <a href="#">
+                    <Link to="/user">
                       <figure className="profile-thumb-small">
-                        <img src="assets/images/profile/profile-small-33.jpg" alt="profile picture" />
+                        <img src="assets/images/profile/profile-small-33.jpg" alt="profile" />
                       </figure>
-                    </a>
+                    </Link>
                   </div>
-                  {/* profile picture end */}
+                  {/* profile picture end 
                   <div className="unorder-list-info">
-                    <h3 className="list-title"><a href="#">Travel The World</a></h3>
-                    <p className="list-subtitle"><a href="#">adventure</a></p>
+                    <h3 className="list-title"><Link to="/user">Travel The World</Link></h3>
+                    <p className="list-subtitle"><Link to="/user">adventure</Link></p>
                   </div>
                   <button className="like-button active">
-                    <img className="heart" src="assets/images/icons/heart.png" alt />
-                    <img className="heart-color" src="assets/images/icons/heart-color.png" alt />
+                    <img className="heart" src="assets/images/icons/heart.png" alt="like" />
+                    <img className="heart-color" src="assets/images/icons/heart-color.png" alt="unlike" />
                   </button>
-                </li>
-                <li className="unorder-list">
-                  {/* profile picture end */}
-                  <div className="profile-thumb">
-                    <a href="#">
-                      <figure className="profile-thumb-small">
-                        <img src="assets/images/profile/profile-small-30.jpg" alt="profile picture" />
-                      </figure>
-                    </a>
-                  </div>
-                  {/* profile picture end */}
-                  <div className="unorder-list-info">
-                    <h3 className="list-title"><a href="#">Foodcort Nirala</a></h3>
-                    <p className="list-subtitle"><a href="#">food</a></p>
-                  </div>
-                  <button className="like-button">
-                    <img className="heart" src="assets/images/icons/heart.png" alt />
-                    <img className="heart-color" src="assets/images/icons/heart-color.png" alt />
-                  </button>
-                </li>
-                <li className="unorder-list">
-                  {/* profile picture end */}
-                  <div className="profile-thumb">
-                    <a href="#">
-                      <figure className="profile-thumb-small">
-                        <img src="assets/images/profile/profile-small-5.jpg" alt="profile picture" />
-                      </figure>
-                    </a>
-                  </div>
-                  {/* profile picture end */}
-                  <div className="unorder-list-info">
-                    <h3 className="list-title"><a href="#">Rolin Theitar</a></h3>
-                    <p className="list-subtitle"><a href="#">drama</a></p>
-                  </div>
-                  <button className="like-button">
-                    <img className="heart" src="assets/images/icons/heart.png" alt />
-                    <img className="heart-color" src="assets/images/icons/heart-color.png" alt />
-                  </button>
-                </li>
-                <li className="unorder-list">
-                  {/* profile picture end */}
-                  <div className="profile-thumb">
-                    <a href="#">
-                      <figure className="profile-thumb-small">
-                        <img src="assets/images/profile/profile-small-29.jpg" alt="profile picture" />
-                      </figure>
-                    </a>
-                  </div>
-                  {/* profile picture end */}
-                  <div className="unorder-list-info">
-                    <h3 className="list-title"><a href="#">Active Mind</a></h3>
-                    <p className="list-subtitle"><a href="#">fitness</a></p>
-                  </div>
-                  <button className="like-button">
-                    <img className="heart" src="assets/images/icons/heart.png" alt />
-                    <img className="heart-color" src="assets/images/icons/heart-color.png" alt />
-                  </button>
+                  */}
                 </li>
               </ul>
             </div>
@@ -268,7 +151,7 @@ export const RightSideBar = ({user,profileImage,imageAlt,noProfilePhoto})=> {
                                <li className="unorder-list" key={i}>
                                {/* profile picture end */}
                                <div className="profile-thumb">
-                                 <Link to href="#">
+                                 <Link to="/">
                                    <figure className="profile-thumb-small">
                                      <img src={profileImage} onError={i=>i.target.src=`${noProfilePhoto}`} alt={imageAlt} />
                                    </figure>
@@ -276,12 +159,12 @@ export const RightSideBar = ({user,profileImage,imageAlt,noProfilePhoto})=> {
                                </div>
                                {/* profile picture end */}
                                <div className="unorder-list-info">
-                                 <h3 className="list-title"><Link to={`/${user._id}`} >{user.firstName +" "+ user.lastName}</Link></h3>
+                                 <h3 className="list-title"><Link to={`/user/${user._id}`} >{user.firstName +" "+ user.lastName}</Link></h3>
                                  <p className="list-subtitle"><Link to={`/friend/${user._id}`}>10 mutual</Link></p>
                                </div>
                                <button className="like-button">
-                                 <img className="heart" src="assets/images/icons/heart.png" alt="follow" />
-                                 <img className="heart-color" src="assets/images/icons/heart-color.png" alt="unfollow" />
+                                 <img className="heart" src={heart}alt="follow" />
+                                 <img className="heart-color" src={heartColor} alt="unfollow" />
                                </button>
                              </li>
 
@@ -293,9 +176,11 @@ export const RightSideBar = ({user,profileImage,imageAlt,noProfilePhoto})=> {
             <h4 className="widget-title">Advertizement</h4>
             <div className="widget-body">
               <div className="add-thumb">
-                <a href="#">
+                {/*}
+                <Link to="/">
                   <img src="assets/images/banner/advertise.jpg" alt="advertisement" />
-                </a>
+                </Link>
+                */}
               </div>
             </div>
           </div>
@@ -305,19 +190,20 @@ export const RightSideBar = ({user,profileImage,imageAlt,noProfilePhoto})=> {
   <div className="widget-body">
     <ul className="like-page-list-wrapper">
       <li className="unorder-list">
-        {/* profile picture end */}
+        {/* profile picture end *
         <div className="profile-thumb">
-          <a href="#">
+          <Link to="/">
             <figure className="profile-thumb-small">
-              <img src="assets/images/profile/profile-small-9.jpg" alt="profile picture" />
+              <img src="assets/images/profile/profile-small-9.jpg" alt="profile" />
             </figure>
-          </a>
+          </Link>
         </div>
-        {/* profile picture end */}
+        {/* profile picture end *
         <div className="unorder-list-info">
-          <h3 className="list-title"><a href="#">Any one can join with us if you want</a></h3>
+          <h3 className="list-title"><Link to="/">Any one can join with us if you want</Link></h3>
           <p className="list-subtitle">5 min ago</p>
         </div>
+        */}
       </li>
     </ul>
   </div>
@@ -337,7 +223,7 @@ return(
       <li className="unorder-list">
         {/* profile picture end */}
         <div className="profile-thumb">
-          <Link to href="#">
+          <Link to="/">
             <figure className="profile-thumb-small">
               <img src={profileImage} onError={noImage} alt={imageAlt} />
             </figure>
@@ -365,9 +251,9 @@ return(
   <h4 className="widget-title">Advertizement</h4>
   <div className="widget-body">
     <div className="add-thumb">
-      <a href="#">
+      <Link to="/">
         <img src="assets/images/banner/advertise.jpg" alt="advertisement" />
-      </a>
+      </Link>
     </div>
   </div>
 </div>
@@ -383,75 +269,75 @@ return(
       <li className="unorder-list">
         {/* profile picture end */}
         <div className="profile-thumb">
-          <a href="#">
+          <Link to="/">
             <figure className="profile-thumb-small">
-              <img src="assets/images/profile/profile-small-9.jpg" alt="profile picture" />
+              <img src="assets/images/profile/profile-small-9.jpg" alt="profile" />
             </figure>
-          </a>
+          </Link>
         </div>
         {/* profile picture end */}
         <div className="unorder-list-info">
-          <h3 className="list-title"><a href="#">Any one can join with us if you want</a></h3>
+          <h3 className="list-title"><Link to="/">Any one can join with us if you want</Link></h3>
           <p className="list-subtitle">5 min ago</p>
         </div>
       </li>
       <li className="unorder-list">
         {/* profile picture end */}
         <div className="profile-thumb">
-          <a href="#">
+          <Link to="/">
             <figure className="profile-thumb-small">
-              <img src="assets/images/profile/profile-small-35.jpg" alt="profile picture" />
+              <img src="assets/images/profile/profile-small-35.jpg" alt="profile" />
             </figure>
-          </a>
+          </Link>
         </div>
         {/* profile picture end */}
         <div className="unorder-list-info">
-          <h3 className="list-title"><a href="#">Any one can join with us if you want</a></h3>
+          <h3 className="list-title"><Link to="/">Any one can join with us if you want</Link></h3>
           <p className="list-subtitle">10 min ago</p>
         </div>
       </li>
       <li className="unorder-list">
         {/* profile picture end */}
         <div className="profile-thumb">
-          <a href="#">
+          <Link to="/">
             <figure className="profile-thumb-small">
-              <img src="assets/images/profile/profile-small-15.jpg" alt="profile picture" />
+              <img src="assets/images/profile/profile-small-15.jpg" alt="profil" />
             </figure>
-          </a>
+          </Link>
         </div>
         {/* profile picture end */}
         <div className="unorder-list-info">
-          <h3 className="list-title"><a href="#">Any one can join with us if you want</a></h3>
+          <h3 className="list-title"><Link to="/">Any one can join with us if you want</Link></h3>
           <p className="list-subtitle">18 min ago</p>
         </div>
       </li>
       <li className="unorder-list">
         {/* profile picture end */}
         <div className="profile-thumb">
-          <a href="#">
+          <Link to="/">
             <figure className="profile-thumb-small">
-              <img src="assets/images/profile/profile-small-6.jpg" alt="profile picture" />
+              <img src="assets/images/profile/profile-small-6.jpg" alt="profile" />
             </figure>
-          </a>
+          </Link>
         </div>
         {/* profile picture end */}
         <div className="unorder-list-info">
-          <h3 className="list-title"><a href="#">Any one can join with us if you want</a></h3>
+          <h3 className="list-title"><Link to="/">Any one can join with us if you want</Link></h3>
           <p className="list-subtitle">25 min ago</p>
         </div>
       </li>
       <li className="unorder-list">
         {/* profile picture end */}
         <div className="profile-thumb">
-          <a href="#">
+          <Link to="/">
             <figure className="profile-thumb-small">
-              <img src="assets/images/profile/profile-small-34.jpg" alt="profile picture" />
+              <img src="assets/images/profile/profile-small-34.jpg" alt="profile" />
             </figure>
-          </a>
+          </Link>
         </div>
         {/* profile picture end */}
         <div className="unorder-list-info">
-          <h3 className="list-title"><a href="#">Any one can join with us if you want</a></h3>
+          <h3 className="list-title"><Link to="/">Any one can join with us if you want</Link></h3>
           <p className="list-subtitle">39 min ago</p>
         </div>
       </li>

@@ -1,19 +1,18 @@
 import React,{Component} from 'react';
-import {ReadPostCard,EmptyPost} from '../../componet/Card';
-import {ScrollToTop, } from '../../componet/Footer.jsx';
+import {ReadPostCard} from './component';
+//import {ScrollToTop, } from '../../componet/Footer.jsx';
 import {MainHeader, SecondHeader } from '../../componet/Header.jsx';
 import {singlePost,photoAPI} from "./apiPost";
 import {isAuthenticated} from "../../auth/index";
-//import CreatePost from "./CreatePost";
 import DefaultImage from "./defaultImage.jpg";
 import NoProfile from "../users/images/avatar.jpg";
 //import { CardProfile, LikeCard, TopNew } from '../../componet/RSideBar';
 //import { Notifications, Advert, FriendsZOne } from '../../componet/LSideBar';
 import { Redirect,Link } from 'react-router-dom';
-import Comment from './Comment';
+import Comment from './component/Comment';
 import {CommentList} from './component'
-import {comment,uncomment,like,unlike} from './apiPost';
-//import CommentList from './CommentList';
+import {uncomment,like,unlike} from './apiPost';
+
 
 
 class SinglePost extends Component{
@@ -90,7 +89,6 @@ class SinglePost extends Component{
     };
     componentDidMount(){
         const postId = this.props.match.params.postId;
-        console.log(JSON.stringify(postId))
         if (!postId){
             this.setState({redirect:true});
         }
@@ -138,7 +136,6 @@ class SinglePost extends Component{
           </aside>
         </div>
        <div className="col-lg-6 order-1 order-lg-2" >
-           {/* auth ? (<CreatePost profileImage="" noProfileImage={NoProfile} />):("")*/}
             {
                post === "" ? ("loading ...") :(
                 <ReadPostCard 
@@ -148,7 +145,6 @@ class SinglePost extends Component{
                 noImage={DefaultImage} 
                 imageAlt={post.title} 
                 singlePost={true} 
-                imageAlt={post.title} 
                 profilePhoto="" 
                 noProfilePhoto={NoProfile} 
                 likeToggle={this.likeToggle}
@@ -189,7 +185,7 @@ class SinglePost extends Component{
     </div>
   </div>
 </main>
-<ScrollToTop />
+
 
 {/*<Footer />*/}
 {/*<SecondFooter />*/}
